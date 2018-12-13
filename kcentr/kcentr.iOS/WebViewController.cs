@@ -24,19 +24,37 @@ namespace kcentr.iOS
 
             webView = new UIWebView(View.Bounds);
             View.AddSubview(webView);
-            webView.LoadFinished += WebView_LoadFinished;
             webView.ShouldStartLoad = (webView, request, navType) =>
             {
-                System.Console.WriteLine("###" + request.Url.AbsoluteString);
+//                System.Console.WriteLine("###" + request.Url.AbsoluteString);
                 if (request.Url.AbsoluteString == "myapp://scan") {
-                    var options = new ZXing.Mobile.MobileBarcodeScanningOptions();
-                    options.PossibleFormats = new List<ZXing.BarcodeFormat>() {
-                        ZXing.BarcodeFormat.EAN_8, ZXing.BarcodeFormat.EAN_13
+                    var options = new ZXing.Mobile.MobileBarcodeScanningOptions
+                    {
+                        PossibleFormats = new List<ZXing.BarcodeFormat>() {
+                        ZXing.BarcodeFormat.EAN_8, ZXing.BarcodeFormat.EAN_13, ZXing.BarcodeFormat.CODE_128
+                    }
                     };
 
-                    var scanner = new ZXing.Mobile.MobileBarcodeScanner();
-                    var result = scanner.Scan(options);
-                    HandleScanResult(result);
+                    var scanner = new ZXing.Mobile.MobileBarcodeScanner
+                    {
+                        //                    scanner.ScanContinuously(HandleScanResult);
+                        TopText = "Поднесите камеру к штрих-коду для сканирования",
+                        BottomText = "Штрих-код будет автоматически отсканирован"
+                    };
+                    scanner.Scan(options).ContinueWith(t => {
+                        var result = t.Result;
+
+                        var format = result?.BarcodeFormat.ToString() ?? string.Empty;
+                        var value = result?.Text ?? string.Empty;
+
+                        BeginInvokeOnMainThread(() => {
+                            if (value != null && !string.IsNullOrEmpty(value))
+                                webView.EvaluateJavascript("location.href = '/search?q=" + value + "';");
+//                            var av = UIAlertController.Create("Barcode Result", format + "|" + value, UIAlertControllerStyle.Alert);
+//                            av.AddAction(UIAlertAction.Create("OK", UIAlertActionStyle.Cancel, null));
+//                            PresentViewController(av, true, null);
+                        });
+                    });
                 }
                 return true;
             };
@@ -48,20 +66,6 @@ namespace kcentr.iOS
 
         }
 
-        private void WebView_LoadFinished(object sender, EventArgs e)
-        {
-            throw new NotImplementedException();
-        }
-
-        private void HandleScanResult(Task<Result> result)
-        {
-            result = result;
-        }
-
-        private void HandleScanResult(ZXing.Result result)
-        {
-            webView.EvaluateJavascript("location.href = '/search?q=" + result.Text + "';");
-        }
 
 
     }

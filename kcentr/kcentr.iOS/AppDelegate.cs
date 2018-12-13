@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 
 using Foundation;
+using Plugin.FirebasePushNotification;
 using UIKit;
 
 namespace kcentr.iOS
@@ -15,7 +16,6 @@ namespace kcentr.iOS
     {
         // class-level declarations
         UIWindow window;
-        UINavigationController navigationController;
         UIViewController viewController;
 
         //
@@ -27,6 +27,7 @@ namespace kcentr.iOS
         //
         public override bool FinishedLaunching(UIApplication app, NSDictionary options)
         {
+            FirebasePushNotificationManager.Initialize(options, true);
             // create a new window instance based on the screen size
             window = new UIWindow(UIScreen.MainScreen.Bounds);
 
@@ -42,9 +43,40 @@ namespace kcentr.iOS
 
             global::Xamarin.Forms.Forms.Init();
             global::ZXing.Net.Mobile.Forms.iOS.Platform.Init();
-
+            
             return true;
 
         }
+        public override void RegisteredForRemoteNotifications(UIApplication application, NSData deviceToken)
+        {
+            FirebasePushNotificationManager.DidRegisterRemoteNotifications(deviceToken);
+            CrossFirebasePushNotification.Current.OnTokenRefresh += (s, p) =>
+            {
+                System.Diagnostics.Debug.WriteLine($"TOKEN : {p.Token}");
+            };
+        }
+
+        public override void FailedToRegisterForRemoteNotifications(UIApplication application, NSError error)
+        {
+            FirebasePushNotificationManager.RemoteNotificationRegistrationFailed(error);
+
+        }
+        // To receive notifications in foregroung on iOS 9 and below.
+        // To receive notifications in background in any iOS version
+        public override void DidReceiveRemoteNotification(UIApplication application, NSDictionary userInfo, Action<UIBackgroundFetchResult> completionHandler)
+        {
+            // If you are receiving a notification message while your app is in the background,
+            // this callback will not be fired 'till the user taps on the notification launching the application.
+
+            // If you disable method swizzling, you'll need to call this method. 
+            // This lets FCM track message delivery and analytics, which is performed
+            // automatically with method swizzling enabled.
+            FirebasePushNotificationManager.DidReceiveMessage(userInfo);
+            // Do your magic to handle the notification data
+            System.Console.WriteLine(userInfo);
+
+            completionHandler(UIBackgroundFetchResult.NewData);
+        }
+
     }
 }

@@ -107,6 +107,7 @@
     <Compile Include="AppDelegate.cs" />
     <Compile Include="WebViewController.cs" />
     <None Include="Entitlements.plist" />
+    <EmbeddedResource Include="GoogleService-Info.plist" />
     <None Include="Info.plist" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
@@ -162,7 +163,10 @@
     <Reference Include="Xamarin.iOS" />
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="Xamarin.Forms" Version="3.3.0.967583" />
+    <PackageReference Include="Plugin.FirebasePushNotification">
+      <Version>2.3.5</Version>
+    </PackageReference>
+    <PackageReference Include="Xamarin.Forms" Version="3.4.0.1008975" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Xamarin\iOS\Xamarin.iOS.CSharp.targets" />
   <ItemGroup>
