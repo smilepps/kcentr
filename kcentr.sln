@@ -7,7 +7,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "kcentr.Android", "kcentr\kc
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "kcentr.iOS", "kcentr\kcentr.iOS\kcentr.iOS.csproj", "{35884B57-72B4-4BD5-84B8-E8972EE00A60}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "kcentr", "kcentr\kcentr\kcentr.csproj", "{39EAA60B-9A20-4E89-AF23-4FE952EE71A2}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "kcentr", "kcentr\kcentr\kcentr.csproj", "{39EAA60B-9A20-4E89-AF23-4FE952EE71A2}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

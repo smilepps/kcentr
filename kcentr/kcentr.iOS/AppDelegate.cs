@@ -32,10 +32,6 @@ namespace kcentr.iOS
             window = new UIWindow(UIScreen.MainScreen.Bounds);
 
             viewController = new WebViewController();
-
-            //navigationController = new UINavigationController();
-            //navigationController.PushViewController(viewController, false);
-
             window.RootViewController = viewController;
 
             // make the window visible
